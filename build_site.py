@@ -1,0 +1,202 @@
+"""Собирает index.html: интерактивную карту папок.
+Запуск:  python build_site.py   (потом открой index.html в браузере)"""
+import json, os
+
+TITLE = "Проекты по урокам"
+SUBTITLE = "Крок · карта папок. Нажми на урок, чтобы увидеть проект и описание."
+
+ROOT = os.path.dirname(os.path.abspath(__file__))
+OUT = "index.html"
+SKIP = {".git", "__pycache__", ".venv", ".ipynb_checkpoints", "node_modules", "build_site.py"}
+
+
+def read(path):
+    for enc in ("utf-8", "cp1251"):
+        try:
+            with open(path, encoding=enc) as f:
+                return f.read()
+        except (UnicodeDecodeError, OSError):
+            pass
+    return ""
+
+
+def scan(abs_path, rel=""):
+    node = {"type": "dir", "name": os.path.basename(abs_path), "path": rel, "readme": "", "children": []}
+    for n in sorted(os.listdir(abs_path), key=str.lower):
+        p = os.path.join(abs_path, n)
+        r = f"{rel}/{n}" if rel else n
+        if n in SKIP or n.startswith(".") or n == OUT:
+            continue
+        if os.path.isdir(p):
+            node["children"].append(scan(p, r))
+        elif n.lower() == "readme.md":
+            node["readme"] = read(p)
+            node["children"].append({"type": "file", "name": n, "path": r, "size": os.path.getsize(p)})
+        else:
+            node["children"].append({"type": "file", "name": n, "path": r, "size": os.path.getsize(p)})
+    return node
+
+
+TEMPLATE = r"""<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<style>
+:root{--ink:#14213d;--paper:#f4f7fb;--panel:#fff;--line:#d3dbe7;--mute:#566580;--red:#d62828;--sun:#f5b301;--code:#eaeff6;
+--sans:"Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;--mono:ui-monospace,Consolas,"SF Mono",monospace}
+@media (prefers-color-scheme:dark){:root{--ink:#e9eef6;--paper:#0e1623;--panel:#162132;--line:#293850;--mute:#94a3bb;--red:#ff5d55;--code:#1b2a40}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.55 var(--sans)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+header{display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:20px clamp(16px,4vw,40px);border-bottom:1px solid var(--line);background:var(--panel)}
+.brand{background:none;border:0;padding:0;text-align:left;cursor:pointer;display:flex;align-items:center;gap:14px}
+.sun{width:34px;height:34px;border-radius:50%;background:var(--sun);box-shadow:0 0 0 5px color-mix(in srgb,var(--red) 85%,transparent) inset;flex:none}
+.brand h1{margin:0;font-size:1.55rem;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.brand span.sub{display:block;color:var(--mute);font-size:.9rem;margin-top:3px;max-width:60ch}
+#q{width:min(320px,100%);padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);font:inherit}
+.layout{display:grid;grid-template-columns:300px 1fr;gap:0;min-height:calc(100vh - 82px)}
+nav{border-right:1px solid var(--line);padding:18px 14px;background:var(--panel);overflow:auto}
+nav details{margin-left:14px;border-left:1px solid var(--line)}
+nav>details,nav>div>details{margin-left:0;border-left:0}
+nav summary,nav .leaf{list-style:none;cursor:pointer;padding:5px 8px;border-radius:6px;display:flex;gap:8px;align-items:baseline;font-size:.95rem}
+nav summary::-webkit-details-marker{display:none}
+nav summary::before{content:"▸";color:var(--mute);font-size:.75rem;transition:transform .15s}
+nav details[open]>summary::before{transform:rotate(90deg)}
+nav summary:hover,nav .leaf:hover{background:var(--code)}
+nav .leaf{margin-left:14px;color:var(--mute);font-family:var(--mono);font-size:.82rem}
+nav .leaf::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--mute);flex:none;align-self:center}
+nav .on{background:var(--code);font-weight:700}
+main{padding:clamp(20px,4vw,44px);max-width:900px}
+.crumbs{font-family:var(--mono);font-size:.82rem;color:var(--mute);margin-bottom:10px}
+.crumbs button{background:none;border:0;padding:0;cursor:pointer;color:var(--red);text-decoration:underline}
+main h2.title{margin:0 0 18px;font-size:2rem;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.doc{border-left:4px solid var(--sun);padding:2px 0 2px 20px;margin-bottom:28px;max-width:70ch}
+.doc h2,.doc h3,.doc h4{margin:1.2em 0 .4em;line-height:1.25}
+.doc h2{font-size:1.25rem}.doc h3{font-size:1.1rem}
+.doc p,.doc ul{margin:.5em 0}
+.doc code{background:var(--code);padding:1px 6px;border-radius:4px;font-family:var(--mono);font-size:.9em}
+.doc pre{background:var(--code);padding:12px 14px;border-radius:8px;overflow-x:auto}
+.doc pre code{padding:0;background:none}
+.doc a{color:var(--red)}
+.empty{color:var(--mute)}
+h3.sec{font-size:1rem;margin:0 0 8px;color:var(--mute);font-weight:600}
+.files{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:10px;background:var(--panel);overflow:hidden}
+.files li+li{border-top:1px solid var(--line)}
+.files a,.files button{display:flex;width:100%;gap:12px;align-items:baseline;padding:11px 16px;background:none;border:0;text-align:left;cursor:pointer;color:inherit;text-decoration:none}
+.files a:hover,.files button:hover{background:var(--code)}
+.files .n{flex:1;word-break:break-word}.files .m{font-family:var(--mono);font-size:.8rem;color:var(--mute)}
+.files .d .n{font-weight:700}
+/* тропа уроков */
+.trail{list-style:none;margin:8px 0 0;padding:0 0 0 22px;position:relative}
+.trail::before{content:"";position:absolute;left:8px;top:14px;bottom:14px;width:3px;background:linear-gradient(var(--sun),var(--red));border-radius:3px}
+.trail li{position:relative;margin-bottom:14px}
+.trail li::before{content:"";position:absolute;left:-22px;top:20px;width:13px;height:13px;border-radius:50%;background:var(--panel);border:3px solid var(--red)}
+.stop{display:block;width:100%;text-align:left;cursor:pointer;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;transition:border-color .15s,transform .15s}
+.stop:hover{border-color:var(--red);transform:translateX(3px)}
+.stop b{font-size:1.15rem;display:block;letter-spacing:-.01em}
+.stop p{margin:4px 0 8px;color:var(--mute);max-width:62ch}
+.stop .m{font-family:var(--mono);font-size:.8rem;color:var(--mute)}
+.hit{margin-bottom:8px}
+@media (max-width:820px){.layout{grid-template-columns:1fr}nav{border-right:0;border-bottom:1px solid var(--line);max-height:240px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <button class="brand" id="home"><i class="sun"></i><div><h1>__TITLE__</h1><span class="sub">__SUBTITLE__</span></div></button>
+  <input id="q" type="search" placeholder="Поиск по папкам и файлам" aria-label="Поиск">
+</header>
+<div class="layout"><nav id="tree" aria-label="Дерево папок"></nav><main id="view"></main></div>
+<script>
+const DATA = __DATA__;
+const $ = s => document.querySelector(s);
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const pretty = n => n.replace(/_/g," ");
+const url = p => encodeURI(p);
+const size = b => b < 1024 ? b + " Б" : b < 1048576 ? (b/1024).toFixed(1) + " КБ" : (b/1048576).toFixed(1) + " МБ";
+const count = n => n.type === "file" ? 1 : n.children.reduce((a,c) => a + count(c), 0);
+const all = [];
+(function walk(n, parent){ n.parent = parent; all.push(n); (n.children||[]).forEach(c => walk(c, n)); })(DATA, null);
+
+function md(src){
+  const blocks = [];
+  src = esc(src).replace(/```[^\n]*\n([\s\S]*?)```/g, (m, c) => { blocks.push(c); return "\u0000" + (blocks.length-1) + "\u0000"; });
+  const inl = t => t.replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>")
+    .replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+  const out = []; let list = false, m;
+  for (const line of src.split("\n")){
+    if (m = line.match(/^\u0000(\d+)\u0000$/)){ if(list){out.push("</ul>");list=false;} out.push("<pre><code>"+blocks[m[1]]+"</code></pre>"); continue; }
+    if (m = line.match(/^\s*[-*] (.*)/)){ if(!list){out.push("<ul>");list=true;} out.push("<li>"+inl(m[1])+"</li>"); continue; }
+    if (list){ out.push("</ul>"); list = false; }
+    if (m = line.match(/^(#{1,3}) (.*)/)){ const l = m[1].length + 1; out.push("<h"+l+">"+inl(m[2])+"</h"+l+">"); continue; }
+    if (line.trim()) out.push("<p>"+inl(line)+"</p>");
+  }
+  if (list) out.push("</ul>");
+  return out.join("\n");
+}
+const blurb = n => { const l = (n.readme||"").split("\n").find(x => x.trim() && !x.startsWith("#") && !x.startsWith("```")); return l ? l.replace(/[`*]/g,"") : "Описание пока не добавлено."; };
+
+let current = DATA;
+function mark(){ document.querySelectorAll("#tree .on").forEach(e => e.classList.remove("on")); const e = document.querySelector('#tree [data-p="'+CSS.escape(current.path)+'"]'); if (e) e.classList.add("on"); }
+
+function buildTree(n, box){
+  n.children.forEach(c => {
+    if (c.type === "dir"){
+      const d = document.createElement("details"); d.open = c.parent === DATA;
+      const s = document.createElement("summary"); s.dataset.p = c.path; s.textContent = pretty(c.name);
+      s.addEventListener("click", () => show(c)); d.appendChild(s); buildTree(c, d); box.appendChild(d);
+    } else {
+      const a = document.createElement("a"); a.className = "leaf"; a.textContent = c.name; a.href = url(c.path); a.target = "_blank"; a.style.textDecoration = "none"; a.style.color = "inherit"; box.appendChild(a);
+    }
+  });
+}
+
+function show(n){
+  current = n; $("#q").value = "";
+  if (n === DATA){ home(); mark(); return; }
+  const chain = []; for (let x = n.parent; x && x !== DATA; x = x.parent) chain.unshift(x);
+  const crumbs = ['<button data-go="">Главная</button>'].concat(chain.map(x => '<button data-go="'+esc(x.path)+'">'+esc(pretty(x.name))+'</button>')).join(" / ");
+  const rows = n.children.map(c => c.type === "dir"
+    ? '<li class="d"><button data-go="'+esc(c.path)+'"><span class="n">📁 '+esc(pretty(c.name))+'</span><span class="m">'+count(c)+' файл.</span></button></li>'
+    : '<li><a href="'+url(c.path)+'" target="_blank"><span class="n">'+esc(c.name)+'</span><span class="m">'+size(c.size)+'</span></a></li>').join("");
+  $("#view").innerHTML = '<div class="crumbs">'+crumbs+'</div><h2 class="title">'+esc(pretty(n.name))+'</h2>'
+    + (n.readme ? '<div class="doc">'+md(n.readme)+'</div>' : '<p class="empty">В этой папке нет README.md. Добавь его, чтобы здесь появилось описание.</p>')
+    + '<h3 class="sec">Содержимое папки</h3><ul class="files">'+(rows || '<li><span class="m" style="padding:11px 16px;display:block">Папка пуста</span></li>')+'</ul>';
+  mark(); window.scrollTo(0,0);
+}
+
+function home(){
+  const lessons = DATA.children.filter(c => c.type === "dir");
+  $("#view").innerHTML = '<h2 class="title">Уроки</h2>' + (lessons.length
+    ? '<ol class="trail">' + lessons.map(l => '<li><button class="stop" data-go="'+esc(l.path)+'"><b>'+esc(pretty(l.name))+'</b><p>'+esc(blurb(l))+'</p><span class="m">'+count(l)+' файл.</span></button></li>').join("") + '</ol>'
+    : '<p class="empty">Пока нет папок. Создай папку урока рядом с build_site.py и запусти скрипт ещё раз.</p>');
+}
+
+function search(t){
+  t = t.trim().toLowerCase(); if (!t){ show(current); return; }
+  const hits = all.filter(n => n !== DATA && (n.name.toLowerCase().includes(t) || (n.readme||"").toLowerCase().includes(t)));
+  $("#view").innerHTML = '<h2 class="title">Найдено: '+hits.length+'</h2>' + (hits.length ? '<ul class="files">' + hits.map(n =>
+    n.type === "dir" ? '<li class="d"><button data-go="'+esc(n.path)+'"><span class="n">📁 '+esc(pretty(n.name))+'</span><span class="m">'+esc(n.path)+'</span></button></li>'
+    : '<li><a href="'+url(n.path)+'" target="_blank"><span class="n">'+esc(n.name)+'</span><span class="m">'+esc(n.path)+'</span></a></li>').join("") + '</ul>' : '<p class="empty">Ничего не нашлось. Попробуй другое слово.</p>');
+}
+
+document.addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (!b) return; const p = b.dataset.go; show(all.find(n => n.type === "dir" && n.path === p) || DATA); });
+$("#home").addEventListener("click", () => show(DATA));
+$("#q").addEventListener("input", e => search(e.target.value));
+buildTree(DATA, $("#tree")); home();
+</script>
+</body>
+</html>
+"""
+
+if __name__ == "__main__":
+    data = scan(ROOT)
+    blob = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
+    page = TEMPLATE.replace("__DATA__", blob).replace("__TITLE__", TITLE).replace("__SUBTITLE__", SUBTITLE)
+    with open(os.path.join(ROOT, OUT), "w", encoding="utf-8") as f:
+        f.write(page)
+    print("Готово: index.html создан. Открой его в браузере.")
