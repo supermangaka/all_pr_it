@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff0d8">
+<title>Crypto Boss — большая крипто-гонка</title>
+<style>
+:root{
+  --ink:#26324a;--muted:#71809b;--paper:#fffdf8;--cream:#fff3df;--line:#e8dfd0;
+  --orange:#ff925e;--yellow:#ffd45d;--blue:#66b8ee;--purple:#ad91ec;--green:#73c99b;
+  --pink:#f18cb4;--shadow:0 14px 34px rgba(65,60,87,.11);--radius:23px;
+}
+*{box-sizing:border-box}
+html{min-width:320px;background:#fff0d8}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:Nunito,"Trebuchet MS",system-ui,-apple-system,sans-serif;background:
+ radial-gradient(circle at 8% 8%,rgba(255,210,97,.42) 0 7%,transparent 7.2%),
+ radial-gradient(circle at 94% 22%,rgba(161,213,255,.32) 0 9%,transparent 9.2%),
+ radial-gradient(circle at 18% 94%,rgba(250,169,203,.22) 0 12%,transparent 12.2%),
+ linear-gradient(135deg,#fff1dc,#f4f0ff 55%,#eaf8ff);}
+button,input,select{font:inherit}button{cursor:pointer;border:0;color:inherit}
+button:disabled{opacity:.4;cursor:not-allowed;filter:grayscale(.5)}
+.wrap{max-width:1440px;margin:auto;padding:20px clamp(10px,2vw,28px) 44px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:17px}
+.brand{display:flex;align-items:center;gap:12px}.brand-mark{width:58px;height:58px;display:grid;place-items:center;border-radius:20px;background:linear-gradient(145deg,#ffe27d,#ff9e62);box-shadow:0 7px 0 #d98251;font-size:33px;transform:rotate(-5deg)}
+h1{font-size:clamp(25px,4vw,36px);line-height:1;margin:0;font-weight:1000;letter-spacing:-1.3px}.brand-sub{margin-top:5px;color:var(--muted);font-size:12px;font-weight:800;letter-spacing:.5px}
+.top-actions{display:flex;align-items:center;gap:9px}.connection{padding:8px 12px;border:1px solid #dce8da;border-radius:99px;background:#f3fff3;font-size:12px;font-weight:900;color:#429b68}.connection.offline{background:#fff2ef;border-color:#f4c6ba;color:#c55d4a}
+.btn{padding:12px 17px;border-radius:15px;background:#f0edf6;font-weight:1000;box-shadow:0 4px 0 #d8d2e3;transition:transform .12s,box-shadow .12s}.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #d8d2e3}.btn.primary{background:linear-gradient(135deg,#ffad69,#ff845d);color:white;box-shadow:0 5px 0 #d56c4a}.btn.blue{background:linear-gradient(135deg,#83d1ff,#65aef0);color:white;box-shadow:0 5px 0 #4789c6}.btn.green{background:linear-gradient(135deg,#8ce0ad,#59bd87);color:#164f39;box-shadow:0 5px 0 #409a68}.btn.yellow{background:linear-gradient(135deg,#ffe27b,#ffc451);color:#735018;box-shadow:0 5px 0 #d6a43c}.btn.pink{background:linear-gradient(135deg,#f9aad0,#ec7db0);color:white;box-shadow:0 5px 0 #c75f90}.btn.ghost{background:#fff;border:1px solid var(--line);box-shadow:0 4px 0 #e6dfd5}.btn.small{padding:9px 12px;font-size:13px;border-radius:12px}
+.panel{background:rgba(255,253,248,.94);border:2px solid rgba(255,255,255,.85);border-radius:var(--radius);box-shadow:var(--shadow);padding:clamp(14px,2vw,22px)}
+.hidden{display:none!important}.muted{color:var(--muted)}.eyebrow{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:#fff2c9;color:#93631d;border-radius:99px;font-size:11px;font-weight:1000;letter-spacing:.7px;text-transform:uppercase}
+h2{font-size:clamp(22px,3vw,30px);line-height:1.1;letter-spacing:-.7px;margin:0 0 9px;font-weight:1000}h3{font-size:17px;margin:0;font-weight:1000}.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.tiny{font-size:12px;color:var(--muted);font-weight:800}
+.entry{max-width:1020px;margin:4vh auto 0;display:grid;gap:16px}.hero{position:relative;overflow:hidden;padding:clamp(20px,4vw,38px);background:linear-gradient(115deg,#fffdf7 0%,#fff8e7 53%,#f7f0ff 100%)}.hero-main{display:grid;grid-template-columns:1.25fr .75fr;align-items:center;gap:12px}.hero h2{font-size:clamp(32px,5vw,53px);max-width:600px;margin:13px 0}.hero h2 em{font-style:normal;color:#f28a50}.hero p{max-width:590px;color:#687690;font-weight:700;line-height:1.6}.mascot-stage{display:flex;justify-content:center;align-items:center;min-height:190px;position:relative}.mascot{width:170px;height:170px;display:grid;place-items:center;border-radius:46% 54% 48% 52%;background:radial-gradient(circle at 35% 25%,#fff7c7,#ffd16a 62%,#ffad66);font-size:106px;box-shadow:inset 0 -12px 0 rgba(184,104,50,.12),0 16px 30px #e6aa6b55;transform:rotate(7deg);animation:float 3s ease-in-out infinite}.coin-float{position:absolute;font-size:30px;animation:float 2.5s ease-in-out infinite}.coin-float.one{top:10px;right:12%}.coin-float.two{bottom:12px;left:8%;animation-delay:.7s}.coin-float.three{top:42%;left:7%;animation-delay:1.1s}@keyframes float{50%{transform:translateY(-9px) rotate(5deg)}}
+.entry-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.form-card{display:grid;gap:12px}.form-card.create{background:linear-gradient(145deg,#fffaf0,#fff1df)}.form-card.join{background:linear-gradient(145deg,#f4f9ff,#f2efff)}.form-card h3{font-size:20px}.field{display:grid;gap:7px}.field label{font-size:12px;color:var(--muted);font-weight:1000}.field input,.field select{width:100%;padding:12px 14px;border-radius:13px;border:2px solid #e9e4dc;background:white;color:var(--ink);outline:none;font-weight:800}.field input:focus,.field select:focus{border-color:#88c6f1}.avatars{display:flex;gap:6px;flex-wrap:wrap}.avatar-choice{width:42px;height:42px;padding:0;border-radius:13px;background:#fff;border:2px solid #ebe4d9;font-size:24px;box-shadow:0 3px 0 #e3ddd3}.avatar-choice.selected{border-color:#ff9d60;background:#fff0df;transform:translateY(-2px)}.howto{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.how-item{background:#fff;border-radius:16px;padding:13px;border:1px solid #eee5da}.how-item b{display:block;margin:5px 0;font-size:13px}.how-item p{color:var(--muted);font-size:11px;line-height:1.45;font-weight:700}.entry-notice,.toast{padding:11px 14px;border-radius:13px;background:#fff4d9;color:#875c23;font-size:13px;font-weight:900}.entry-notice.error,.toast.error{background:#fff0ed;color:#b94c40;border:1px solid #ffc9bd}.entry-foot{font-size:11px;color:var(--muted);line-height:1.5;text-align:center}
+.lobby{max-width:850px;margin:5vh auto}.lobby-card{text-align:center;background:linear-gradient(140deg,#fffdf7,#f2f8ff)}.room-code{display:inline-flex;align-items:center;gap:12px;padding:10px 16px;border-radius:18px;background:#fff2c9;border:2px dashed #f2bd59;font-size:clamp(25px,5vw,37px);font-weight:1000;letter-spacing:5px;margin:12px 0}.player-list{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:20px 0}.player-chip{display:flex;align-items:center;gap:7px;padding:9px 12px;border-radius:14px;background:#fff;border:1px solid #e9e4da;font-size:13px;font-weight:900}.player-chip .face{font-size:22px}.player-chip.off{opacity:.5}.rules-line{margin-top:16px;color:var(--muted);font-size:12px;font-weight:800}
+.game-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:4px 0 13px}.round-pill{border-radius:99px;padding:9px 14px;background:#fff;border:2px solid #f3dfaf;font-size:13px;font-weight:1000;white-space:nowrap}.turn-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(100deg,#fff6d9,#fffdf7);border:2px solid #fff;border-radius:19px;padding:12px 16px;margin-bottom:14px;box-shadow:var(--shadow)}.turn-who{display:flex;align-items:center;gap:10px}.turn-face{width:46px;height:46px;display:grid;place-items:center;border-radius:15px;background:#fff;font-size:27px}.turn-text b{display:block;font-size:15px}.turn-text span{font-size:11px;color:var(--muted);font-weight:800}.players-strip{display:flex;gap:7px;flex-wrap:wrap;margin:-3px 0 13px}.mini-player{display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:13px;background:#fff;border:1px solid #ece5da;font-size:11px;font-weight:900}.mini-player.active{border:2px solid #ffab65;background:#fff3e2;padding:6px 9px}.mini-player.off{opacity:.5}.mini-player .face{font-size:19px}.mini-player .cash{color:#5a9c71;font-size:10px}.layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(310px,.8fr);gap:15px;align-items:start}.board-panel{min-width:0}.board-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:14px}.board-head .tiny{max-width:240px;text-align:right}.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:repeat(5,minmax(75px,1fr));gap:7px;aspect-ratio:1/1;max-width:780px;margin:auto}.cell{position:relative;min-width:0;border:2px solid rgba(255,255,255,.95);border-radius:15px;padding:7px 5px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;box-shadow:0 4px 0 rgba(53,61,83,.1);overflow:hidden;transition:transform .15s}.cell .cell-icon{font-size:clamp(19px,2.4vw,31px);line-height:1.05}.cell .cell-name{font-size:clamp(9px,1.1vw,12px);font-weight:1000;line-height:1.1}.cell .cell-number{position:absolute;top:4px;left:6px;font-size:9px;color:#59647b88;font-weight:1000}.cell.start{background:#ffe28d}.cell.exchange{background:#c7e8ff}.cell.lottery{background:#c9f1d4}.cell.job{background:#ffe0ad}.cell.bank{background:#e4d9ff}.cell.surprise{background:#ffd5e7}.cell.mine{background:#d8e7ff}.cell.party{background:#ffd2b8}.cell.bonus{background:#fff0b5}.cell.current{outline:4px solid #31415f;outline-offset:1px;transform:translateY(-2px);z-index:2}.cell .tokens{display:flex;justify-content:center;gap:1px;min-height:17px;font-size:13px;line-height:1}.cell .tokens span{filter:drop-shadow(0 1px 0 #fff)}.cell-center{grid-column:2/5;grid-row:2/5;border-radius:21px;background:radial-gradient(circle at 40% 30%,#fff,#f6f0ff 65%,#e4f4ff);border:2px dashed #d8cbed;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px;overflow:hidden}.center-mascot{font-size:clamp(35px,6vw,65px);line-height:1.1}.center-title{font-weight:1000;font-size:clamp(12px,1.6vw,19px);margin-top:3px}.center-caption{font-size:clamp(8px,1vw,11px);color:var(--muted);font-weight:800;margin-top:4px}.track-label{font-size:9px;letter-spacing:1px;color:#8890a4;font-weight:1000;margin-top:10px}
+.roll-panel{margin-top:15px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;background:linear-gradient(110deg,#fff7df,#fff0e8);border-radius:19px;padding:14px;border:2px solid white}.roll-copy h3{font-size:17px}.roll-copy p{font-size:11px;color:var(--muted);font-weight:800;margin-top:4px}.roll-controls{display:flex;align-items:center;gap:10px}.die{width:52px;height:52px;display:grid;place-items:center;background:white;border-radius:15px;font-size:35px;box-shadow:0 4px 0 #e7dbca}.die.rolling{animation:shake .14s infinite}@keyframes shake{50%{transform:rotate(10deg) scale(1.08)}}
+.side{display:grid;gap:14px;align-content:start}.player-card{background:linear-gradient(140deg,#fff,#f6f5ff)}.my-heading{display:flex;align-items:center;gap:10px;margin-bottom:13px}.my-face{width:48px;height:48px;display:grid;place-items:center;background:#fff0d5;border-radius:16px;font-size:28px}.my-heading h3{font-size:19px}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.stat{background:white;border:1px solid #eee9e0;border-radius:14px;padding:10px}.stat small{display:block;color:var(--muted);font-size:10px;font-weight:1000}.stat strong{font-size:16px;display:block;margin-top:2px;overflow-wrap:anywhere}.stat.wide{grid-column:1/-1;background:#fff4d9}.portfolio{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:9px}.coin-card{border-radius:13px;padding:9px;background:white;border:1px solid #ece6dd}.coin-card b{font-size:12px}.coin-card strong{display:block;font-size:14px;margin-top:2px}.coin-card small{color:var(--muted);font-size:10px;font-weight:800}.actions-card{background:linear-gradient(145deg,#fffdf6,#fff6e8)}.action-area{display:grid;gap:9px}.action-hint{padding:11px;border-radius:13px;background:#fff;border:1px dashed #e5ddcf;color:var(--muted);font-size:12px;font-weight:800;line-height:1.5}.action-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}.market-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.market-card{background:#fff;border-radius:13px;padding:9px;border:1px solid #eee7df}.market-card .coin-name{font-size:11px;font-weight:1000}.market-card strong{display:block;margin-top:3px;font-size:14px}.market-card small{font-size:10px;color:var(--muted);font-weight:800}.log{max-height:255px;overflow:auto;display:grid;gap:6px;padding-right:2px}.log-item{background:#fff;border-radius:11px;padding:8px 10px;font-size:11px;font-weight:700;line-height:1.4}.log-item time{color:#9aa2b1;font-size:10px;margin-right:5px}.ranking{display:grid;gap:7px}.rank-row{display:flex;align-items:center;justify-content:space-between;gap:8px;background:white;border-radius:13px;padding:10px 12px;border:1px solid #eee6dc;font-weight:900}.rank-left{display:flex;align-items:center;gap:8px}.rank-left .face{font-size:22px}.rank-row:first-child{background:#fff4c9;border-color:#f2d27c}.toast{position:fixed;z-index:20;top:16px;left:50%;transform:translateX(-50%);width:min(520px,calc(100% - 24px));box-shadow:0 10px 35px #28334a22;text-align:center}.modal-bg{position:fixed;inset:0;z-index:30;background:#25314b88;display:grid;place-items:center;padding:15px}.modal{width:min(440px,100%);background:#fffdf8;border-radius:23px;padding:20px;box-shadow:0 20px 70px #15213d55}.modal h2{font-size:24px}.modal p{font-size:12px;color:var(--muted);font-weight:800;line-height:1.5;margin:8px 0}.modal .field{margin:13px 0}.modal-actions{display:flex;gap:9px;margin-top:16px}.modal-actions button{flex:1}.modal .calc{padding:10px 12px;border-radius:13px;background:#fff2d8;font-size:12px;font-weight:1000}.footer-note{text-align:center;color:var(--muted);font-size:10px;font-weight:800;margin-top:15px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.board{max-width:650px}.side{grid-template-columns:1fr 1fr}.player-card,.actions-card{grid-row:auto}.log-card{grid-column:1/-1}}
+@media(max-width:600px){.wrap{padding:10px 9px 28px}.brand-mark{width:46px;height:46px;border-radius:15px;font-size:26px}.brand-sub{font-size:10px}.connection{font-size:10px;padding:7px 8px}.top-actions .btn{padding:8px 10px}.hero-main{grid-template-columns:1fr}.mascot-stage{min-height:120px}.mascot{width:115px;height:115px;font-size:75px}.coin-float{font-size:22px}.entry-grid{grid-template-columns:1fr}.howto{grid-template-columns:1fr}.how-item{display:flex;gap:8px;align-items:center}.how-item b{margin:0}.how-item p{flex:1}.game-head{align-items:flex-start}.turn-banner{padding:9px 11px}.layout{gap:11px}.board{gap:4px;grid-template-rows:repeat(5,minmax(54px,1fr))}.cell{border-radius:10px;padding:5px 2px}.cell .cell-icon{font-size:clamp(17px,5vw,25px)}.cell .cell-name{font-size:clamp(8px,2.2vw,10px)}.cell .cell-number{font-size:8px;top:3px;left:4px}.cell .tokens{font-size:11px;min-height:12px}.cell-center{border-radius:13px;padding:4px}.center-mascot{font-size:34px}.center-title{font-size:11px}.center-caption{font-size:8px}.track-label{font-size:7px;margin-top:5px}.roll-panel{grid-template-columns:1fr;padding:11px}.roll-controls{justify-content:space-between}.die{width:45px;height:45px;font-size:30px}.side{grid-template-columns:1fr}.log-card{grid-column:auto}.stats{grid-template-columns:repeat(2,1fr)}.panel{padding:13px;border-radius:18px}.board-head .tiny{font-size:9px}.room-code{letter-spacing:3px}.action-buttons{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">🐹</div><div><h1>CRYPTO BOSS</h1><div class="brand-sub">БОЛЬШАЯ КРИПТО-ГОНКА · LAN PARTY</div></div></div>
+    <div class="top-actions"><span id="connection" class="connection">● Подключаемся…</span><button id="leaveBtn" class="btn ghost small hidden">Выйти</button></div>
+  </header>
+
+  <section id="entry" class="entry">
+    <div class="panel hero">
+      <div class="hero-main">
+        <div><span class="eyebrow">🎮 Игра для друзей и семьи</span><h2>Стань самым крутым <em>крипто-боссом!</em></h2><p>Кидай кубик, собирай смешные монетки, покупай майнеры и обгоняй друзей. Никаких настоящих денег — только игровая валюта, удача и мемы 🐸</p></div>
+        <div class="mascot-stage"><span class="coin-float one">🪙</span><span class="coin-float two">💎</span><span class="coin-float three">🚀</span><div class="mascot">🐹</div></div>
+      </div>
+    </div>
+    <div class="entry-grid">
+      <div class="panel form-card create">
+        <span class="eyebrow">👑 Для организатора</span><h3>Создать комнату</h3>
+        <div class="field"><label for="hostName">Как вас зовут?</label><input id="hostName" maxlength="16" value="Крипто-хомяк" autocomplete="nickname"></div>
+        <div class="field"><label>Выберите героя</label><div id="hostAvatars" class="avatars"></div></div>
+        <button id="createBtn" class="btn primary">🚀 Создать игру</button>
+      </div>
+      <div class="panel form-card join">
+        <span class="eyebrow">🤝 Для друзей</span><h3>Присоединиться</h3>
+        <div class="field"><label for="roomCode">Код комнаты</label><input id="roomCode" maxlength="6" placeholder="Например, A1B2C3" autocomplete="off" style="text-transform:uppercase;letter-spacing:2px"></div>
+        <div class="field"><label for="joinName">Ваше имя</label><input id="joinName" maxlength="16" value="Игрок" autocomplete="nickname"></div>
+        <div class="field"><label>Выберите героя</label><div id="joinAvatars" class="avatars"></div></div>
+        <button id="joinBtn" class="btn blue">🎉 Войти в комнату</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="section-title"><h3>Как играть?</h3><span class="tiny">ПРАВИЛА НА ОДНОЙ ЛАДОНИ</span></div>
+      <div class="howto">
+        <div class="how-item"><span style="font-size:25px">🎲</span><div><b>1. Бросай кубик</b><p>Двигайся по полю и выполняй задание клетки.</p></div></div>
+        <div class="how-item"><span style="font-size:25px">🪙</span><div><b>2. Копи богатство</b><p>Торгуй монетками, строй майнеры и собирай бонусы.</p></div></div>
+        <div class="how-item"><span style="font-size:25px">🏆</span><div><b>3. Стань боссом</b><p>После 8 раундов побеждает самый богатый игрок.</p></div></div>
+      </div>
+    </div>
+    <div id="entryNotice" class="entry-notice hidden"></div>
+    <div class="entry-foot">Для игры на нескольких устройствах подключите их к одной Wi‑Fi сети. Один компьютер запускает сервер, остальные открывают его локальный адрес в браузере.</div>
+  </section>
+
+  <section id="lobby" class="lobby hidden">
+    <div class="panel lobby-card">
+      <span class="eyebrow">🧃 Комната готова к веселью</span><h2 style="margin-top:13px">Зовите друзей!</h2><p class="muted" style="font-weight:800">Пусть каждый откроет игру на своём телефоне или компьютере и введёт этот код.</p>
+      <div class="room-code"><span id="roomCodeShow">------</span><button id="copyCode" class="btn small yellow">📋 Копировать</button></div>
+      <h3>Игроки в комнате</h3><div id="lobbyPlayers" class="player-list"></div>
+      <div class="action-buttons" style="max-width:520px;margin:0 auto"><button id="startBtn" class="btn primary">🎲 Начать игру</button><button id="lobbyLeave" class="btn ghost">Покинуть комнату</button></div>
+      <p id="lobbyHint" class="rules-line">Минимум 2 игрока · максимум 6 · организатор запускает партию</p>
+      <div id="lobbyNotice" class="entry-notice hidden" style="margin-top:14px"></div>
+    </div>
+  </section>
+
+  <section id="game" class="hidden">
+    <div class="game-head"><div><span class="eyebrow">🐹 Крипто-арена</span><h2 style="margin:7px 0 0">Большая гонка за монетами</h2></div><span id="round" class="round-pill">Раунд 1 / 8</span></div>
+    <div class="turn-banner"><div class="turn-who"><div id="turnFace" class="turn-face">🐹</div><div class="turn-text"><b id="turnName">Ход игрока</b><span id="turnSub">Бросайте кубик!</span></div></div><span id="turnBadge" class="eyebrow">ВАШ ХОД</span></div>
+    <div id="playersTop" class="players-strip"></div>
+    <div class="layout">
+      <main class="panel board-panel">
+        <div class="board-head"><div><h3>🗺️ Игровое поле</h3><span class="tiny">Иди по дорожке по часовой стрелке</span></div><span class="tiny">16 клеток · 8 раундов</span></div>
+        <div id="board" class="board"></div>
+        <div class="roll-panel">
+          <div class="roll-copy"><h3 id="eventTitle">Твой ход, босс!</h3><p id="eventText">Нажми на кубик и узнай, куда тебя занесёт.</p></div>
+          <div class="roll-controls"><div id="die" class="die">🎲</div><button id="rollBtn" class="btn primary">Бросить!</button><button id="endBtn" class="btn ghost hidden">Закончить ход</button></div>
+        </div>
+        <div id="rankingBox" class="panel hidden" style="margin-top:14px;background:#fff8e2;box-shadow:none"><div class="section-title"><h3>🏆 Таблица чемпионов</h3><span class="eyebrow">ФИНИШ</span></div><div id="ranking" class="ranking"></div><div id="replayArea" style="margin-top:13px"></div></div>
+      </main>
+
+      <aside class="side">
+        <div class="panel player-card">
+          <div class="section-title"><h3>🎒 Мой рюкзак</h3><span class="tiny">ТВОЙ ПЛАНШЕТ</span></div>
+          <div class="my-heading"><div id="myFace" class="my-face">🐹</div><div><h3 id="myName">Игрок</h3><span id="myPosition" class="tiny">Клетка 1</span></div></div>
+          <div class="stats">
+            <div class="stat wide"><small>💰 МОИ ДЕНЬГИ</small><strong id="cash">—</strong></div>
+            <div class="stat"><small>⛏️ МАЙНЕРЫ</small><strong id="nodes">0</strong></div>
+            <div class="stat"><small>🏁 КРУГИ</small><strong id="laps">0</strong></div>
+            <div class="stat"><small>🧾 ДОЛГ БАНКУ</small><strong id="debt">0 сом</strong></div>
+            <div class="stat"><small>💎 АКТИВЫ</small><strong id="assets">0 сом</strong></div>
+          </div>
+          <div class="section-title" style="margin:14px 0 7px"><h3>Мои монетки</h3><span class="tiny">ПО КОЛИЧЕСТВУ</span></div><div id="portfolio" class="portfolio"></div>
+        </div>
+
+        <div class="panel actions-card">
+          <div class="section-title"><h3>🎯 Что делаем?</h3><span id="actionTag" class="tiny">ТВОЙ ХОД</span></div>
+          <div id="actionArea" class="action-area"><div class="action-hint">Когда бросишь кубик, здесь появится действие для клетки, на которой ты остановился.</div></div>
+        </div>
+
+        <div class="panel">
+          <div class="section-title"><h3>📊 Курс монет</h3><span class="tiny">ОБНОВЛЯЕТСЯ КАЖДЫЙ РАУНД</span></div><div id="market" class="market-grid"></div>
+          <p class="footer-note">Это игровая биржа. Настоящие криптовалюты здесь не покупаются.</p>
+        </div>
+
+        <div class="panel log-card"><div class="section-title"><h3>📜 История приключений</h3><span class="tiny">LIVE</span></div><div id="log" class="log"></div></div>
+      </aside>
+    </div>
+  </section>
+</div>
+<div id="toast" class="toast hidden"></div>
+<div id="modal"></div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+(() => {
+  'use strict';
+  const socket = io({ transports: ['websocket', 'polling'], reconnection: true, reconnectionAttempts: Infinity });
+  const $ = (id) => document.getElementById(id);
+  const AVATARS = ['🦊', '🐼', '🐸', '🐻', '🐯', '🐵', '🐧', '🐨'];
+  const PATH = [[1,1],[1,2],[1,3],[1,4],[1,5],[2,5],[3,5],[4,5],[5,5],[5,4],[5,3],[5,2],[5,1],[4,1],[3,1],[2,1]];
+  const GLYPHS = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+  let state = null;
+  let myUid = null;
+  let selectedHost = AVATARS[0];
+  let selectedJoin = AVATARS[1];
+  let toastTimer = null;
+
+  const money = (n) => `${Math.round(n || 0).toLocaleString('ru-RU')} сом`;
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const currentPlayer = () => state?.players?.[state.turnIndex] || null;
+  const me = () => state?.players?.find((p) => p.uid === myUid) || null;
+  const myTurn = () => Boolean(state && state.status === 'playing' && currentPlayer()?.uid === myUid);
+  const canAct = () => Boolean(myTurn() && me()?.rolled && !me()?.actionUsed);
+
+  function showScreen(name) {
+    ['entry','lobby','game'].forEach((id) => $(id).classList.toggle('hidden', id !== name));
+    $('leaveBtn').classList.toggle('hidden', name === 'entry');
+  }
+
+  function toast(message, error = false) {
+    const el = $('toast');
+    el.textContent = message;
+    el.classList.remove('hidden', 'error');
+    if (error) el.classList.add('error');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.add('hidden'), 3600);
+  }
+
+  function entryNotice(message, error = true) {
+    $('entryNotice').textContent = message;
+    $('entryNotice').classList.remove('hidden');
+    $('entryNotice').classList.toggle('error', error);
+  }
+
+  function ackEmit(event, data = {}) {
+    return new Promise((resolve) => {
+      let finished = false;
+      const timer = setTimeout(() => {
+        if (!finished) { finished = true; resolve({ ok: false, error: 'Сервер не ответил. Проверьте соединение.' }); }
+      }, 7000);
+      socket.emit(event, data, (result) => {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timer);
+        resolve(result || { ok: false, error: 'Пустой ответ сервера.' });
+      });
+    });
+  }
+
+  function chooseAvatar(containerId, which) {
+    const container = $(containerId);
+    container.innerHTML = '';
+    AVATARS.forEach((avatar) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'avatar-choice' + (avatar === (which === 'host' ? selectedHost : selectedJoin) ? ' selected' : '');
+      btn.textContent = avatar;
+      btn.setAttribute('aria-label', `Аватар ${avatar}`);
+      btn.addEventListener('click', () => {
+        if (which === 'host') selectedHost = avatar; else selectedJoin = avatar;
+        chooseAvatar(containerId, which);
+      });
+      container.append(btn);
+    });
+  }
+  chooseAvatar('hostAvatars', 'host');
+  chooseAvatar('joinAvatars', 'join');
+
+  socket.on('connect', async () => {
+    $('connection').textContent = '● На связи';
+    $('connection').classList.remove('offline');
+    const token = localStorage.getItem('cryptoBossToken');
+    if (token) {
+      const result = await ackEmit('resume', { token });
+      if (result.ok) {
+        myUid = result.uid;
+        toast('Связь восстановлена! Возвращаемся в игру 🐹');
+      } else {
+        localStorage.removeItem('cryptoBossToken');
+        localStorage.removeItem('cryptoBossUid');
+        myUid = null;
+        if (!state) showScreen('entry');
+        entryNotice(result.error || 'Не удалось восстановить старую комнату. Создайте новую игру.');
+      }
+    }
+  });
+
+  socket.on('disconnect', () => {
+    $('connection').textContent = '● Нет связи';
+    $('connection').classList.add('offline');
+    if (state) toast('Связь прервалась. Пытаемся вернуться…', true);
+  });
+
+  socket.on('state', (next) => {
+    state = next;
+    if (!myUid) myUid = localStorage.getItem('cryptoBossUid');
+    if (next.status === 'lobby') { showScreen('lobby'); renderLobby(); }
+    else { showScreen('game'); renderGame(); }
+  });
+
+  socket.on('notice', (notice) => toast(notice.message || 'Что-то пошло не так.', true));
+
+  async function saveSession(result) {
+    myUid = result.uid;
+    localStorage.setItem('cryptoBossToken', result.token);
+    localStorage.setItem('cryptoBossUid', result.uid);
+  }
+
+  $('createBtn').addEventListener('click', async () => {
+    $('createBtn').disabled = true;
+    const result = await ackEmit('createRoom', { name: $('hostName').value, avatar: selectedHost });
+    $('createBtn').disabled = false;
+    if (!result.ok) return entryNotice(result.error || 'Не удалось создать комнату.');
+    await saveSession(result);
+    $('entryNotice').classList.add('hidden');
+  });
+
+  $('joinBtn').addEventListener('click', async () => {
+    $('joinBtn').disabled = true;
+    const result = await ackEmit('joinRoom', { code: $('roomCode').value, name: $('joinName').value, avatar: selectedJoin });
+    $('joinBtn').disabled = false;
+    if (!result.ok) return entryNotice(result.error || 'Не удалось подключиться.');
+    await saveSession(result);
+    $('entryNotice').classList.add('hidden');
+  });
+
+  $('roomCode').addEventListener('input', (event) => { event.target.value = event.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0,6); });
+  $('roomCode').addEventListener('keydown', (event) => { if (event.key === 'Enter') $('joinBtn').click(); });
+
+  function renderLobby() {
+    if (!state) return;
+    $('roomCodeShow').textContent = state.code;
+    $('lobbyPlayers').innerHTML = state.players.map((p) => `<div class="player-chip ${p.connected ? '' : 'off'}"><span class="face">${p.avatar}</span><span>${esc(p.name)}${p.uid === myUid ? ' · это вы' : ''}</span>${p.uid === state.hostUid ? ' 👑' : ''}</div>`).join('');
+    const isHost = state.hostUid === myUid;
+    const connectedCount = state.players.filter((p) => p.connected).length;
+    $('startBtn').disabled = !isHost || connectedCount < 2;
+    $('startBtn').textContent = isHost ? (connectedCount < 2 ? '👥 Ждём второго игрока' : '🎲 Начать игру') : '⌛ Ждём организатора…';
+    $('lobbyHint').textContent = `${connectedCount}/6 на связи · минимум 2 · партия длится 8 раундов`;
+    $('lobbyNotice').classList.add('hidden');
+  }
+
+  $('copyCode').addEventListener('click', async () => {
+    if (!state) return;
+    try { await navigator.clipboard.writeText(state.code); $('copyCode').textContent = 'Скопировано ✓'; }
+    catch (_) { $('copyCode').textContent = state.code; }
+  });
+
+  $('startBtn').addEventListener('click', async () => {
+    const result = await ackEmit('startGame');
+    if (!result.ok) toast(result.error, true);
+  });
+
+  function renderBoard() {
+    const board = $('board');
+    board.innerHTML = '';
+    const cells = state.board || [];
+    cells.forEach((cell, index) => {
+      const [row, col] = PATH[index];
+      const tile = document.createElement('div');
+      tile.className = `cell ${cell.color || ''}` + (state.players.some((p) => p.uid === state.currentUid && p.position === index) ? ' current' : '');
+      tile.style.gridRow = String(row);
+      tile.style.gridColumn = String(col);
+      const tokens = state.players.filter((p) => p.position === index).map((p) => `<span title="${esc(p.name)}">${p.avatar}</span>`).join('');
+      tile.innerHTML = `<span class="cell-number">${index + 1}</span><span class="cell-icon">${cell.icon}</span><span class="cell-name">${esc(cell.name)}</span><span class="tokens">${tokens}</span>`;
+      board.append(tile);
+    });
+    const center = document.createElement('div');
+    center.className = 'cell-center';
+    const current = currentPlayer();
+    center.innerHTML = `<div class="center-mascot">🐹</div><div class="center-title">CRYPTO BOSS</div><div class="center-caption">${state.status === 'finished' ? 'Игра завершена!' : `${esc(current?.name || 'Друзья')}, ваш ход!`}</div><div class="track-label">НЕ ЗАБУДЬ ПРО МОНЕТКИ 🪙</div>`;
+    board.append(center);
+  }
+
+  function renderPlayersTop() {
+    const current = currentPlayer();
+    $('round').textContent = state.status === 'finished' ? 'Финиш 🏁' : `Раунд ${state.round} / ${state.maxRounds}`;
+    $('turnFace').textContent = current?.avatar || '🐹';
+    $('turnName').textContent = state.status === 'finished' ? 'Партия завершена!' : (current ? `Сейчас играет ${current.name}` : 'Ожидание…');
+    $('turnSub').textContent = state.status === 'finished' ? 'Смотрите итоговую таблицу чемпионов.' : current?.uid === myUid ? 'Твой ход, босс! Бросай кубик.' : 'Поддержи друга и готовься к своему ходу.';
+    $('turnBadge').textContent = state.status === 'finished' ? 'ФИНИШ' : current?.uid === myUid ? 'ТВОЙ ХОД' : 'ХОД ДРУГА';
+    $('turnBadge').style.background = current?.uid === myUid ? '#e4f7e9' : '#fff0d7';
+    $('playersTop').innerHTML = state.players.map((p) => `<div class="mini-player ${p.uid === current?.uid ? 'active' : ''} ${p.connected ? '' : 'off'}"><span class="face">${p.avatar}</span><span>${esc(p.name)}${p.uid === myUid ? ' · вы' : ''}</span><span class="cash">${money(p.cash)}</span>${p.connected ? '' : '📡'}</div>`).join('');
+  }
+
+  function renderMe() {
+    const p = me();
+    if (!p) return;
+    $('myFace').textContent = p.avatar;
+    $('myName').textContent = p.name;
+    $('myPosition').textContent = `Клетка ${p.position + 1} · ${state.board[p.position].name}`;
+    $('cash').textContent = money(p.cash);
+    $('nodes').textContent = p.nodes;
+    $('laps').textContent = p.laps;
+    $('debt').textContent = money(p.debt);
+    const coinValue = state.coins.reduce((sum, coin) => sum + p.coins[coin.id] * state.prices[coin.id], 0);
+    $('assets').textContent = money(coinValue + p.nodes * 25000);
+    $('portfolio').innerHTML = state.coins.map((coin) => `<div class="coin-card"><b>${coin.icon} ${coin.id}</b><strong>${p.coins[coin.id]} шт.</strong><small>${money(state.prices[coin.id])} за монету</small></div>`).join('');
+  }
+
+  function renderMarket() {
+    $('market').innerHTML = state.coins.map((coin) => `<div class="market-card"><div class="coin-name">${coin.icon} ${coin.name}</div><strong>${money(state.prices[coin.id])}</strong><small>${coin.id} · за 1 монету</small></div>`).join('');
+  }
+
+  function openModal(title, content, onConfirm, confirmLabel = 'Подтвердить') {
+    $('modal').innerHTML = `<div class="modal-bg"><div class="modal" role="dialog" aria-modal="true"><h2>${title}</h2>${content}<div class="modal-actions"><button id="modalCancel" class="btn ghost">Отмена</button><button id="modalOk" class="btn primary">${confirmLabel}</button></div></div></div>`;
+    $('modalCancel').addEventListener('click', () => { $('modal').innerHTML = ''; });
+    $('modalOk').addEventListener('click', async () => {
+      const result = await onConfirm();
+      if (result?.ok) $('modal').innerHTML = '';
+      else if (result?.error) toast(result.error, true);
+    });
+  }
+
+  async function sendAction(data) {
+    const result = await ackEmit('action', data);
+    if (!result.ok) toast(result.error || 'Действие не выполнено.', true);
+    return result;
+  }
+
+  function tradeDialog(side = 'buy') {
+    const p = me();
+    const options = state.coins.map((coin) => `<option value="${coin.id}">${coin.icon} ${coin.name} (${coin.id}) — ${money(state.prices[coin.id])}</option>`).join('');
+    openModal('📈 Сделка на бирже', `
+      <div class="field"><label for="tradeCoin">Выберите монетку</label><select id="tradeCoin">${options}</select></div>
+      <div class="field"><label for="tradeSide">Что делаем?</label><select id="tradeSide"><option value="buy" ${side === 'buy' ? 'selected' : ''}>Купить</option><option value="sell" ${side === 'sell' ? 'selected' : ''}>Продать</option></select></div>
+      <div class="field"><label for="tradeQty">Количество (от 1 до 1 000)</label><input id="tradeQty" type="number" min="1" max="1000" step="1" value="1"></div>
+      <div class="calc" id="tradeCalc">Баланс: ${money(p.cash)} · Сервер проверит средства и монеты.</div>`,
+      () => sendAction({ type: 'trade', coin: $('tradeCoin').value, side: $('tradeSide').value, qty: Number($('tradeQty').value) }), 'Совершить сделку');
+    const update = () => {
+      const coin = state.coins.find((c) => c.id === $('tradeCoin').value);
+      const qty = Math.max(0, Math.floor(Number($('tradeQty').value) || 0));
+      $('tradeCalc').textContent = `Сумма: ${money((coin?.id ? state.prices[coin.id] : 0) * qty)} · На счету: ${money(p.cash)} · У вас ${p.coins[$('tradeCoin').value] || 0} монет.`;
+    };
+    $('tradeCoin').addEventListener('change', update);
+    $('tradeQty').addEventListener('input', update);
+    $('tradeSide').addEventListener('change', update);
+    update();
+  }
+
+  function bankDialog() {
+    const p = me();
+    if (p.debt > 0) {
+      openModal('🏦 Возвращаем кредит', `<p>Вы должны банку <b>${money(p.debt)}</b>. Для полного возврата на счету должно быть достаточно денег.</p><div class="calc">Ваш баланс: ${money(p.cash)}</div>`, () => sendAction({ type: 'repay' }), 'Вернуть кредит');
+    } else {
+      openModal('🏦 Кредитный хомяк', `<p>Банк даст вам <b>50 000 сом</b>, но вернуть придётся <b>60 000 сом</b>. Кредит можно закрыть, когда снова попадёте на любую клетку банка.</p><div class="calc">Берите только если уверены в своём бизнес-плане 😉</div>`, () => sendAction({ type: 'loan' }), 'Взять 50 000');
+    }
+  }
+
+  function renderActions() {
+    const root = $('actionArea');
+    const p = me();
+    const mineTurn = myTurn();
+    $('actionTag').textContent = mineTurn ? 'ТВОЙ ХОД' : 'ОЖИДАНИЕ';
+    if (state.status === 'finished') {
+      root.innerHTML = `<div class="action-hint">Игра окончена! Посмотрите таблицу чемпионов ниже игрового поля.</div>`;
+      return;
+    }
+    if (!mineTurn) {
+      root.innerHTML = `<div class="action-hint">Сейчас играет <b>${esc(currentPlayer()?.name || 'друг')}</b>. Как только он завершит ход, очередь перейдёт к вам.</div>`;
+      return;
+    }
+    if (!p.rolled) {
+      root.innerHTML = `<div class="action-hint">🎲 Сначала брось кубик. Клетка сама подскажет, что делать дальше.</div>`;
+      return;
+    }
+    if (p.actionUsed) {
+      root.innerHTML = `<div class="action-hint">✅ Действие на этой клетке уже использовано. Можешь завершить ход.</div>`;
+      return;
+    }
+    const type = state.board[p.position].type;
+    if (type === 'exchange') {
+      root.innerHTML = `<div class="action-hint">📈 Ты на бирже! Купи монетки по текущему курсу или продай те, что уже есть.</div><div class="action-buttons"><button id="buyAction" class="btn blue">🛒 Купить</button><button id="sellAction" class="btn yellow">💸 Продать</button></div>`;
+      $('buyAction').onclick = () => tradeDialog('buy');
+      $('sellAction').onclick = () => tradeDialog('sell');
+    } else if (type === 'bank') {
+      const label = p.debt > 0 ? '💳 Вернуть кредит' : '💰 Взять кредит';
+      const disabled = p.debt > 0 && p.cash < p.debt;
+      root.innerHTML = `<div class="action-hint">🏦 Банк поможет с деньгами. Взять можно 50 000 сом, вернуть нужно 60 000 сом.</div><button id="bankAction" class="btn yellow" ${disabled ? 'disabled' : ''}>${label}</button>`;
+      $('bankAction').onclick = bankDialog;
+    } else if (type === 'mine') {
+      root.innerHTML = `<div class="action-hint">⛏️ Купи майнер за <b>45 000 сом</b>. Каждый раз, когда проходишь старт, он приносит ещё 8 000 сом!</div><button id="nodeAction" class="btn green" ${p.cash < 45000 ? 'disabled' : ''}>⚙️ Купить майнер · 45 000</button>`;
+      $('nodeAction').onclick = () => sendAction({ type: 'node' });
+    } else {
+      root.innerHTML = `<div class="action-hint">✨ На этой клетке бонус уже начислен автоматически. Нажми «Закончить ход» и передай кубик дальше.</div>`;
+    }
+  }
+
+  function renderRanking() {
+    const box = $('rankingBox');
+    if (state.status !== 'finished' || !state.ranking) {
+      box.classList.add('hidden');
+      return;
+    }
+    box.classList.remove('hidden');
+    $('ranking').innerHTML = state.ranking.map((row, index) => `<div class="rank-row"><div class="rank-left"><span>${['🥇','🥈','🥉','🎖️','🎖️','🎖️'][index] || '🎖️'}</span><span class="face">${row.avatar}</span><span>${esc(row.name)}</span>${row.uid === myUid ? '<small>(вы)</small>' : ''}</div><b>${money(row.score)}</b></div>`).join('');
+    $('replayArea').innerHTML = state.hostUid === myUid && state.players.filter((p) => p.connected).length >= 2 ? '<button id="replayBtn" class="btn primary">🔁 Сыграть ещё раз</button>' : '<span class="tiny">Организатор может запустить новую партию.</span>';
+    if ($('replayBtn')) $('replayBtn').onclick = async () => {
+      const result = await ackEmit('restartGame');
+      if (!result.ok) toast(result.error, true);
+    };
+  }
+
+  function renderGame() {
+    if (!state) return;
+    renderPlayersTop();
+    renderBoard();
+    renderMe();
+    renderMarket();
+    renderActions();
+    renderRanking();
+    $('log').innerHTML = state.logs.map((entry) => `<div class="log-item"><time>${esc(entry.time)}</time>${esc(entry.message)}</div>`).join('');
+    const p = me();
+    if (state.status === 'finished') {
+      $('eventTitle').textContent = state.lastEvent?.title || '🏆 Финиш!';
+      $('eventText').textContent = state.lastEvent?.text || 'Партия завершена.';
+      $('die').textContent = '🏆';
+      $('rollBtn').classList.add('hidden');
+      $('endBtn').classList.add('hidden');
+    } else {
+      const mineTurn = myTurn();
+      $('eventTitle').textContent = state.lastEvent?.title || 'Твой ход, босс!';
+      $('eventText').textContent = state.lastEvent?.text || 'Бросай кубик и смотри, что случится.';
+      $('die').textContent = p?.lastRoll ? GLYPHS[p.lastRoll - 1] : '🎲';
+      $('rollBtn').classList.toggle('hidden', !mineTurn || p?.rolled);
+      $('rollBtn').disabled = !mineTurn || Boolean(p?.rolled);
+      $('endBtn').classList.toggle('hidden', !mineTurn || !p?.rolled);
+    }
+  }
+
+  $('rollBtn').addEventListener('click', async () => {
+    $('rollBtn').disabled = true;
+    $('die').classList.add('rolling');
+    const result = await ackEmit('roll');
+    $('die').classList.remove('rolling');
+    if (!result.ok) { $('rollBtn').disabled = false; toast(result.error, true); }
+  });
+
+  $('endBtn').addEventListener('click', async () => {
+    $('endBtn').disabled = true;
+    const result = await ackEmit('endTurn');
+    if (!result.ok) { $('endBtn').disabled = false; toast(result.error, true); }
+  });
+
+  async function leave() {
+    const result = await ackEmit('leaveRoom');
+    if (!result.ok && String(result.error || '').includes('Сервер не ответил')) {
+      toast('Нет связи с сервером. Подключение сохранено — попробуйте ещё раз.', true);
+      return;
+    }
+    if (!result.ok) toast(result.error || 'Не удалось выйти.', true);
+    localStorage.removeItem('cryptoBossToken');
+    localStorage.removeItem('cryptoBossUid');
+    myUid = null;
+    state = null;
+    $('modal').innerHTML = '';
+    showScreen('entry');
+    toast('Вы вышли из комнаты. До новых мемов!');
+  }
+  $('leaveBtn').addEventListener('click', leave);
+  $('lobbyLeave').addEventListener('click', leave);
+
+  const savedUid = localStorage.getItem('cryptoBossUid');
+  if (savedUid) myUid = savedUid;
+})();
+</script>
+</body>
+</html>

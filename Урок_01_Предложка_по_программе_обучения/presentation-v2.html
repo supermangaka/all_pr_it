@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Что учим дальше и почему именно это</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700&family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d1016;--s:#151a23;--s2:#1b2230;--line:#262e3d;--t:#e9edf4;--m:#97a2b5;--a:#7c8cff;
+--fh:"Unbounded","Segoe UI",system-ui,sans-serif;--fb:"Onest","Segoe UI",system-ui,sans-serif}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--t);font-family:var(--fb);line-height:1.6;overflow:hidden}
+.slide{position:absolute;inset:0;display:grid;grid-template-columns:5fr 7fr;gap:clamp(24px,5vw,80px);align-content:center;
+padding:90px clamp(20px,7vw,120px) 100px;opacity:0;visibility:hidden;transform:translateX(30px);
+transition:opacity .4s,transform .4s,visibility .4s;overflow-y:auto}
+.slide.on{opacity:1;visibility:visible;transform:none}
+.slide.past{transform:translateX(-30px)}
+.slide[data-c=blue]{--a:#7c8cff}.slide[data-c=red]{--a:#ff7a7a}.slide[data-c=amber]{--a:#ffb454}
+.slide[data-c=cyan]{--a:#3dd4ec}.slide[data-c=green]{--a:#5fe3a1}
+.hd{border-left:4px solid var(--a);padding-left:clamp(14px,2vw,26px);align-self:center}
+h1,h2{font-family:var(--fh);font-weight:700;letter-spacing:-.02em;line-height:1.12}
+h1{font-size:clamp(2rem,5vw,4rem)}
+h2{font-size:clamp(1.5rem,3vw,2.4rem)}
+.lead{color:var(--m);font-size:clamp(1rem,1.5vw,1.2rem);margin-top:1.1rem;max-width:44ch}
+.col{display:grid;gap:14px;align-content:center}
+.card{background:var(--s);border:1px solid var(--line);border-radius:14px;padding:18px 22px}
+.card h3{font-size:1.05rem;margin-bottom:6px}
+.card h3 span{color:var(--a)}
+.card p,.card li{color:var(--m);font-size:.95rem}
+.card ul{padding-left:1.1rem;display:grid;gap:3px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.note{border:1px dashed var(--a);border-radius:14px;padding:16px 20px;color:var(--t);font-size:.95rem}
+.note b{color:var(--a)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:1.4rem}
+.chips span{font-size:.85rem;padding:5px 13px;border-radius:99px;border:1px solid var(--a);color:var(--a)}
+.step{display:grid;grid-template-columns:96px 1fr;gap:16px;align-items:start}
+.step b{font-family:var(--fh);font-size:.85rem;color:var(--a);padding-top:2px}
+.step p{color:var(--m);font-size:.95rem}
+.top{position:fixed;top:0;left:0;right:0;z-index:9;display:flex;justify-content:space-between;padding:22px clamp(20px,7vw,120px);
+color:var(--m);font-size:.9rem;background:linear-gradient(var(--bg) 55%,transparent)}
+.top b{color:var(--t);font-weight:500}
+.bar{position:fixed;top:0;left:0;height:3px;width:0;background:#7c8cff;transition:width .4s;z-index:11}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:9;display:flex;align-items:center;justify-content:space-between;
+padding:18px clamp(20px,7vw,120px);background:linear-gradient(to top,var(--bg) 60%,transparent)}
+.nav button{width:44px;height:44px;border-radius:50%;background:var(--s);color:var(--t);border:1px solid var(--line);font-size:1.1rem;cursor:pointer}
+.nav button:hover:not(:disabled){border-color:#7c8cff}.nav button:disabled{opacity:.3;cursor:default}
+.nav button:focus-visible{outline:2px solid #7c8cff;outline-offset:3px}
+.dots{display:flex;gap:8px}.dots button{width:10px;height:10px;padding:0;border:0;background:var(--line)}
+.dots button.on{width:28px;border-radius:99px;background:#7c8cff}
+@media(max-width:860px){.slide{grid-template-columns:1fr;align-content:start;padding-top:80px}.two{grid-template-columns:1fr}
+.step{grid-template-columns:1fr;gap:2px}.top span:last-child{display:none}}
+@media(prefers-reduced-motion:reduce){.slide,.bar{transition:none}}
+
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:460px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{color:var(--m);font-weight:500;font-size:.8rem}
+td{color:var(--m)}td:first-child{color:var(--t);font-weight:500}td.hi{color:var(--a)}
+.col>*{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease,border-color .2s}
+.slide.on .col>*{opacity:1;transform:none;transition-delay:calc(var(--i,0)*80ms + 180ms)}
+.card:hover{border-color:var(--a)}
+.slide.on .hd{animation:hd .6s ease both}
+@keyframes hd{from{opacity:0;transform:translateX(-14px)}}
+@keyframes flow{to{stroke-dashoffset:-24}}
+.flow{stroke-dasharray:6 6;animation:flow 1.2s linear infinite}
+@media(prefers-reduced-motion:reduce){.col>*{opacity:1;transform:none;transition:none}.slide.on .hd,.flow{animation:none}}
+</style>
+</head>
+<body>
+<div class="bar" id="bar"></div>
+<div class="top"><b>Куда расти дальше</b><span id="sec"></span></div>
+
+<main>
+<!-- 1 -->
+<section class="slide on" data-c="blue" data-s="Предложение для группы">
+  <div class="hd">
+    <h1>Что учим дальше и почему именно это</h1>
+    <p class="lead">Не список модных технологий, а маршрут: от учебных страниц к приложениям, которые можно показать работодателю.</p>
+  </div>
+  <div class="col">
+    <div class="card"><h3>Ядро</h3><p>TypeScript, React и Next.js, основы серверной части, производительность.</p></div>
+    <div class="card"><h3>Надстройка</h3><p>Безопасность веб-приложений. Её почти не учат на курсах, а разработчики с этим навыком выделяются.</p></div>
+    <div class="card"><h3>Практики</h3><p>Git-процесс командой и осознанная работа с ИИ. Применяем с первого дня, а не изучаем отдельно.</p></div>
+    <div class="card"><h3>Второй этап</h3><p>Мобильная разработка на Flutter, когда ядро уже уверенно работает.</p></div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-c="blue" data-s="Как мы выбирали">
+  <div class="hd">
+    <h2>Как мы выбирали технологии</h2>
+    <p class="lead">Три критерия: нужна ли технология рынку, опирается ли она на то, что мы знаем, и даёт ли результат для портфолио. Если нет сразу по двум, откладываем.</p>
+  </div>
+  <div class="col">
+    <div class="card"><div class="tw"><table>
+      <tr><th>Технология</th><th>Спрос</th><th>Опора на наши знания</th><th>Результат</th></tr>
+      <tr><td>TypeScript и Next.js</td><td class="hi">Высокий</td><td class="hi">Высокая: тот же JavaScript</td><td>Веб-приложение</td></tr>
+      <tr><td>Безопасность</td><td>Растёт, редкий навык у джунов</td><td>Средняя</td><td>Проверенный проект</td></tr>
+      <tr><td>Flutter</td><td>Средний</td><td>Средняя: новый язык Dart</td><td>Мобильное приложение</td></tr>
+      <tr><td>Python</td><td class="hi">Высокий</td><td>Низкая: новый язык</td><td>Серверная часть, скрипты</td></tr>
+    </table></div></div>
+    <div class="note"><b>Важно:</b> это наши оценки, а не статистика. Перед защитой подкрепим их цифрами с hh.ru.</div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="slide" data-c="blue" data-s="Ядро">
+  <div class="hd">
+    <h2>Ядро: современный веб от начала до конца</h2>
+    <p class="lead">Цель — уметь собрать и запустить полноценное приложение самостоятельно, а не только вёрстку.</p>
+    <div class="chips"><span>TypeScript</span><span>Next.js</span><span>React Query</span><span>Zustand</span></div>
+  </div>
+  <div class="col">
+    <div class="two">
+      <div class="card"><h3>TypeScript</h3><p>Типы ловят ошибки до запуска, а рефакторинг перестаёт быть страшным. В командах на нём пишут почти всё новое.</p></div>
+      <div class="card"><h3>React и Next.js</h3><p>Компоненты, хуки, серверный рендеринг и маршрутизация. Next.js даёт и фронтенд, и API в одном проекте.</p></div>
+      <div class="card"><h3>Состояние и архитектура</h3><p>Где хранить данные и как делить код на слои. Без этого проект через месяц превращается в запутанный клубок.</p></div>
+      <div class="card"><h3>Производительность</h3><p>Core Web Vitals, ленивая загрузка, размер бандла. Медленный сайт теряет пользователей и позиции в поиске.</p></div>
+    </div>
+    <div class="note"><b>Мини-бэкенд обязателен.</b> Базовый Node.js, REST API, SQL и авторизация. Полноценный бэкенд-курс не нужен, но без этого фронтендер не понимает, откуда берутся данные.</div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-c="red" data-s="Надстройка">
+  <div class="hd">
+    <h2>Надстройка: безопасность веб-приложений</h2>
+    <p class="lead">Из двух вариантов, дизайна и кибербезопасности, я бы выбрал безопасность. Объяснение справа.</p>
+    <div class="chips"><span>OWASP Top 10</span><span>XSS</span><span>CSRF</span><span>Auth</span></div>
+  </div>
+  <div class="col">
+    <div class="card"><h3>Почему именно она</h3><p>Любое приложение с логином и данными пользователей — потенциальная цель. Разработчик, который понимает типичные уязвимости, пишет код надёжнее и ценится выше. Это прямое продолжение веба, а не отдельная профессия.</p></div>
+    <div class="card"><h3>Что входит</h3>
+      <ul><li>Типичные уязвимости: XSS, CSRF, SQL-инъекции</li><li>Безопасная авторизация: пароли, сессии, JWT</li><li>Хранение секретов и переменных окружения</li><li>Проверка зависимостей и настройка HTTPS</li></ul></div>
+    <div class="note"><b>А дизайн?</b> Это тоже полезно, но мы берём его лёгкой частью: сетки, типографика, доступность и Figma на уровне, достаточном, чтобы интерфейсы выглядели аккуратно. Углублять можно по желанию.</div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="slide" data-c="amber" data-s="Практики">
+  <div class="hd">
+    <h2>Практики: как мы работаем, а не только что учим</h2>
+    <p class="lead">Это правила игры на весь семестр. Они делают из набора студентов команду.</p>
+  </div>
+  <div class="col">
+    <div class="card"><h3>Git и GitHub как рабочий процесс</h3>
+      <ul><li>Отдельная ветка на каждую задачу</li><li>Изменения только через Pull Request</li><li>Каждый PR смотрит минимум один человек из группы</li><li>Автопроверки через GitHub Actions</li></ul></div>
+    <div class="card"><h3>ИИ как помощник, а не замена</h3>
+      <ul><li>Cursor и ассистенты ускоряют рутину, тесты и рефакторинг</li><li>Правило группы: не вставляем код, который не можем объяснить</li><li>Результат ИИ всегда проверяем и запускаем сами</li></ul></div>
+    <div class="note"><b>Почему так.</b> ИИ усиливает того, кто понимает основы, и вредит тому, кто их пропускает. Поэтому сначала понимаем, потом ускоряемся.</div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="slide" data-c="cyan" data-s="Второй этап">
+  <div class="hd">
+    <h2>Второй этап: Flutter</h2>
+    <p class="lead">Сильный навык, но не первый. Начинаем, когда ядро уже работает уверенно.</p>
+    <div class="chips"><span>Dart</span><span>Riverpod</span><span>Firebase</span></div>
+  </div>
+  <div class="col">
+    <div class="card"><h3>Зачем он нужен</h3><p>Один код для iOS и Android. Это способ выйти за пределы браузера и показать, что вы умеете строить приложения, а не только страницы.</p></div>
+    <div class="card"><h3>Почему не сразу</h3><p>Flutter требует нового языка (Dart) и нового мышления (всё есть виджет). Изучать его параллельно с TypeScript и Next.js значит учить всё наполовину.</p></div>
+    <div class="card"><h3>Что получим</h3><p>Мобильную версию проекта, который уже построили в вебе. Тогда логика API и состояния знакома, и остаётся освоить только новый инструмент.</p></div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-c="green" data-s="Решение для группы">
+  <div class="hd">
+    <h2>План и что нужно решить сегодня</h2>
+    <p class="lead">Один общий проект на весь путь: от первой ветки до мобильной версии.</p>
+  </div>
+  <div class="col">
+    <div class="card"><svg viewBox="0 0 600 250" width="100%" role="img" aria-label="Схема проекта: Next.js, API, база данных и Flutter">
+      <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#97a2b5"/></marker></defs>
+      <g fill="#1b2230" stroke-width="2">
+        <rect x="10" y="20" width="170" height="64" rx="12" stroke="#7c8cff"/>
+        <rect x="215" y="20" width="170" height="64" rx="12" stroke="#ff7a7a"/>
+        <rect x="420" y="20" width="170" height="64" rx="12" stroke="#5fe3a1"/>
+        <rect x="215" y="160" width="170" height="64" rx="12" stroke="#3dd4ec"/>
+      </g>
+      <g stroke="#97a2b5" stroke-width="2" fill="none" marker-end="url(#ar)">
+        <line class="flow" x1="180" y1="52" x2="213" y2="52"/>
+        <line class="flow" x1="385" y1="52" x2="418" y2="52"/>
+        <line class="flow" x1="300" y1="160" x2="300" y2="100"/>
+      </g>
+      <g fill="#e9edf4" font-family="Onest,Segoe UI,sans-serif" font-size="15" text-anchor="middle" font-weight="500">
+        <text x="95" y="48">Next.js</text><text x="300" y="48">API</text><text x="505" y="48">База данных</text><text x="300" y="188">Flutter</text>
+      </g>
+      <g fill="#97a2b5" font-family="Onest,Segoe UI,sans-serif" font-size="12.5" text-anchor="middle">
+        <text x="95" y="68">Этап 1: веб</text><text x="300" y="68">Node.js или Python</text><text x="505" y="68">SQL</text><text x="300" y="208">Этап 3: мобильная версия</text>
+      </g>
+      <text x="300" y="118" fill="#ff7a7a" font-family="Onest,Segoe UI,sans-serif" font-size="12.5" text-anchor="middle" display="none">Этап 2</text>
+      <text x="470" y="150" fill="#ff7a7a" font-family="Onest,Segoe UI,sans-serif" font-size="13">Этап 2: безопасность и</text>
+      <text x="470" y="168" fill="#ff7a7a" font-family="Onest,Segoe UI,sans-serif" font-size="13">оптимизация всего проекта</text>
+    </svg></div>
+    <div class="note"><b>Вопросы группе:</b> согласны ли мы на один общий проект? Берём ли безопасность как надстройку? Принимаем ли правило про Pull Request и объяснимый код?</div>
+  </div>
+</section>
+</main>
+
+<nav class="nav" aria-label="Навигация по слайдам">
+  <button id="prev" aria-label="Назад">←</button>
+  <div class="dots" id="dots"></div>
+  <button id="next" aria-label="Вперёд">→</button>
+</nav>
+
+<script>
+(()=>{
+const S=[...document.querySelectorAll('.slide')],P=document.getElementById('prev'),N=document.getElementById('next'),
+D=document.getElementById('dots'),B=document.getElementById('bar'),SEC=document.getElementById('sec');let c=0;
+const dots=S.map((_,i)=>{const b=document.createElement('button');b.setAttribute('aria-label','Слайд '+(i+1));
+b.onclick=()=>go(i);D.appendChild(b);return b});
+function go(n){c=Math.max(0,Math.min(S.length-1,n));
+S.forEach((s,i)=>{s.classList.toggle('on',i===c);s.classList.toggle('past',i<c)});
+dots.forEach((d,i)=>d.classList.toggle('on',i===c));
+P.disabled=c===0;N.disabled=c===S.length-1;
+B.style.width=((c+1)/S.length*100)+'%';
+SEC.textContent=S[c].dataset.s+' · '+(c+1)+'/'+S.length;
+history.replaceState(null,'','#'+(c+1))}
+P.onclick=()=>go(c-1);N.onclick=()=>go(c+1);
+document.addEventListener('keydown',e=>{
+if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(c+1)}
+if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(c-1)}
+if(e.key==='Home')go(0);if(e.key==='End')go(S.length-1)});
+S.forEach(s=>[...s.querySelector('.col').children].forEach((el,i)=>el.style.setProperty('--i',i)));
+let x=null;
+document.addEventListener('touchstart',e=>{x=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{if(x===null)return;const d=e.changedTouches[0].clientX-x;
+if(Math.abs(d)>50)go(c+(d<0?1:-1));x=null});
+go(parseInt(location.hash.slice(1),10)-1||0);
+})();
+</script>
+</body>
+</html>

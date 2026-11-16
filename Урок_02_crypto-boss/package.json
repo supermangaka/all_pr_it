@@ -1,0 +1,18 @@
+{
+  "name": "crypto-boss-lan",
+  "version": "6.1.0",
+  "private": true,
+  "description": "Crypto Boss 6.1 Deluxe: split-screen multiplayer spooky board game for local Wi-Fi",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  }
+}
